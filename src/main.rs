@@ -2,7 +2,9 @@ use std::{fs, thread};
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::error::Error;
+use std::time::Instant;
 
+use reqwest::blocking::Response;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -26,8 +28,13 @@ fn query(configuration: Configuration) -> Result<(), Box<dyn Error>> {
             .collect();
 
         println!("sending request");
-        let response = req.query(&v).send()?;
-        println!("{}", response.status());
+        let now = Instant::now();
+        let response = req.query(&v).send();
+        let time_taken = now.elapsed().as_secs_f64();
+        match response {
+            Ok(response) => println!("response {} in {} seconds", response.status(), time_taken),
+            Err(err) => println!("request failed: {} in {} seconds", err, time_taken),
+        }
     }
 }
 
