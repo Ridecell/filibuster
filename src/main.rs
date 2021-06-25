@@ -4,7 +4,6 @@ use std::convert::TryInto;
 use std::error::Error;
 use std::time::Instant;
 
-use reqwest::blocking::Response;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
